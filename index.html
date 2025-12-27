@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban - Gestió de Tasques</title>
+  <link rel="stylesheet" href="css/estils.css">
+</head>
+<body>
+
+  <header>
+    <h1>Tauler Kanban</h1>
+  </header>
+
+  <main>
+
+    <!-- Formulari -->
+    <aside>
+      <h2>Nova tasca</h2>
+      <form id="task-form">
+        <label>
+          Títol
+          <input type="text" name="titol" required>
+        </label>
+
+        <label>
+          Descripció
+          <textarea name="descripcio"></textarea>
+        </label>
+
+        <label>
+          Prioritat
+          <select name="prioritat">
+            <option value="baixa">Baixa</option>
+            <option value="mitjana">Mitjana</option>
+            <option value="alta">Alta</option>
+          </select>
+        </label>
+
+        <label>
+          Data límit
+          <input type="date" name="data">
+        </label>
+
+        <button type="submit">Afegir tasca</button>
+      </form>
+    </aside>
+
+    <!-- Tauler Kanban -->
+    <section class="kanban">
+
+      <section class="columna">
+        <h3>Per fer</h3>
+        <div class="tasques" id="per-fer"></div>
+      </section>
+
+      <section class="columna">
+        <h3>En curs</h3>
+        <div class="tasques" id="en-curs"></div>
+      </section>
+
+      <section class="columna">
+        <h3>Fet</h3>
+        <div class="tasques" id="fet"></div>
+      </section>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Pràctica Kanban - DAW</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

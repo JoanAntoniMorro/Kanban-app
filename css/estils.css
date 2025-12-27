@@ -1,0 +1,46 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+header, footer {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+main {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+aside {
+  width: 250px;
+  background: white;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.kanban {
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+}
+
+.columna {
+  flex: 1;
+  background: #eaeaea;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.tasques {
+  min-height: 100px;
+}
