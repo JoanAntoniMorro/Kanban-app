@@ -4,6 +4,16 @@ const btnSubmit = form.querySelector("button");
 const columnaPerFer = document.getElementById("per-fer");
 const columnaEnCurs = document.getElementById("en-curs");
 const columnaFet = document.getElementById("fet");
+const filtreEstat = document.getElementById("filtre-estat");
+const filtrePrioritat = document.getElementById("filtre-prioritat");
+const cercaText = document.getElementById("cerca-text");
+
+const statTotal = document.getElementById("stat-total");
+const statPerFer = document.getElementById("stat-perfer");
+const statEnCurs = document.getElementById("stat-encurs");
+const statFet = document.getElementById("stat-fet");
+const statPercent = document.getElementById("stat-percent");
+
 
 let tascaEditantId = null;
 
@@ -44,17 +54,21 @@ form.addEventListener("submit", e => {
 });
 
 function renderTauler() {
-  columnaPerFer.innerHTML = "";
+columnaPerFer.innerHTML = "";
   columnaEnCurs.innerHTML = "";
   columnaFet.innerHTML = "";
 
-  tasques.forEach(tasca => {
+  const visibles = getTasquesFiltrades();
+
+  visibles.forEach(tasca => {
     const card = crearTargeta(tasca);
 
     if (tasca.estat === "perFer") columnaPerFer.appendChild(card);
     if (tasca.estat === "enCurs") columnaEnCurs.appendChild(card);
     if (tasca.estat === "fet") columnaFet.appendChild(card);
   });
+
+  actualitzarEstadistiques();
 }
 
 
@@ -142,3 +156,47 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+
+function getTasquesFiltrades() {
+  return tasques.filter(tasca => {
+
+    if (filtreEstat.value && tasca.estat !== filtreEstat.value) {
+      return false;
+    }
+
+    if (filtrePrioritat.value && tasca.prioritat !== filtrePrioritat.value) {
+      return false;
+    }
+
+    if (cercaText.value) {
+      const text = cercaText.value.toLowerCase();
+      const contingut =
+        tasca.titol.toLowerCase() +
+        " " +
+        tasca.descripcio.toLowerCase();
+
+      if (!contingut.includes(text)) return false;
+    }
+
+    return true;
+  });
+}
+
+function actualitzarEstadistiques() {
+  const total = tasques.length;
+  const perFer = tasques.filter(t => t.estat === "perFer").length;
+  const enCurs = tasques.filter(t => t.estat === "enCurs").length;
+  const fet = tasques.filter(t => t.estat === "fet").length;
+
+  statTotal.textContent = total;
+  statPerFer.textContent = perFer;
+  statEnCurs.textContent = enCurs;
+  statFet.textContent = fet;
+
+  const percent = total === 0 ? 0 : Math.round((fet / total) * 100);
+  statPercent.textContent = percent;
+}
+
+filtreEstat.addEventListener("change", renderTauler);
+filtrePrioritat.addEventListener("change", renderTauler);
+cercaText.addEventListener("input", renderTauler);
