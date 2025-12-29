@@ -1,9 +1,20 @@
+/*************************
+ * VARIABLES GLOBALS
+ *************************/
+const STORAGE_KEY = "tasquesKanban";
+let tasques = [];
+let tascaEditantId = null;
+
+/*************************
+ * REFERÈNCIES DOM
+ *************************/
 const form = document.getElementById("task-form");
 const btnSubmit = form.querySelector("button");
 
 const columnaPerFer = document.getElementById("per-fer");
 const columnaEnCurs = document.getElementById("en-curs");
 const columnaFet = document.getElementById("fet");
+
 const filtreEstat = document.getElementById("filtre-estat");
 const filtrePrioritat = document.getElementById("filtre-prioritat");
 const cercaText = document.getElementById("cerca-text");
@@ -14,9 +25,9 @@ const statEnCurs = document.getElementById("stat-encurs");
 const statFet = document.getElementById("stat-fet");
 const statPercent = document.getElementById("stat-percent");
 
-
-let tascaEditantId = null;
-
+/*************************
+ * MODEL DE TASCA
+ *************************/
 function crearTasca({ titol, descripcio, prioritat, dataVenciment }) {
   return {
     id: Date.now().toString(),
@@ -29,6 +40,21 @@ function crearTasca({ titol, descripcio, prioritat, dataVenciment }) {
   };
 }
 
+/*************************
+ * PERSISTÈNCIA
+ *************************/
+function carregarTasques() {
+  const dades = localStorage.getItem(STORAGE_KEY);
+  tasques = dades ? JSON.parse(dades) : [];
+}
+
+function guardarTasques() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasques));
+}
+
+/*************************
+ * FORMULARI (CREAR / EDITAR)
+ *************************/
 form.addEventListener("submit", e => {
   e.preventDefault();
 
@@ -47,14 +73,29 @@ form.addEventListener("submit", e => {
     dataVenciment: formData.get("data")
   };
 
-  tasques.push(crearTasca(dades));
+  if (tascaEditantId) {
+    const tasca = tasques.find(t => t.id === tascaEditantId);
+    tasca.titol = dades.titol;
+    tasca.descripcio = dades.descripcio;
+    tasca.prioritat = dades.prioritat;
+    tasca.dataVenciment = dades.dataVenciment;
+
+    tascaEditantId = null;
+    btnSubmit.textContent = "Afegir tasca";
+  } else {
+    tasques.push(crearTasca(dades));
+  }
+
   guardarTasques();
   renderTauler();
   form.reset();
 });
 
+/*************************
+ * RENDERITZACIÓ KANBAN
+ *************************/
 function renderTauler() {
-columnaPerFer.innerHTML = "";
+  columnaPerFer.innerHTML = "";
   columnaEnCurs.innerHTML = "";
   columnaFet.innerHTML = "";
 
@@ -71,7 +112,9 @@ columnaPerFer.innerHTML = "";
   actualitzarEstadistiques();
 }
 
-
+/*************************
+ * TARGETA DE TASCA
+ *************************/
 function crearTargeta(tasca) {
   const div = document.createElement("div");
   div.className = `tasca prioritat-${tasca.prioritat}`;
@@ -94,6 +137,9 @@ function crearTargeta(tasca) {
   return div;
 }
 
+/*************************
+ * CANVI D’ESTAT
+ *************************/
 document.addEventListener("change", e => {
   if (e.target.tagName === "SELECT" && e.target.dataset.id) {
     const tasca = tasques.find(t => t.id === e.target.dataset.id);
@@ -103,7 +149,11 @@ document.addEventListener("change", e => {
   }
 });
 
+/*************************
+ * EDITAR / ELIMINAR
+ *************************/
 document.addEventListener("click", e => {
+
   if (e.target.dataset.delete) {
     if (!confirm("Vols eliminar aquesta tasca?")) return;
 
@@ -111,52 +161,23 @@ document.addEventListener("click", e => {
     guardarTasques();
     renderTauler();
   }
+
+  if (e.target.dataset.edit) {
+    const tasca = tasques.find(t => t.id === e.target.dataset.edit);
+
+    form.titol.value = tasca.titol;
+    form.descripcio.value = tasca.descripcio;
+    form.prioritat.value = tasca.prioritat;
+    form.data.value = tasca.dataVenciment;
+
+    tascaEditantId = tasca.id;
+    btnSubmit.textContent = "Guardar canvis";
+  }
 });
 
-if (e.target.dataset.edit) {
-  const tasca = tasques.find(t => t.id === e.target.dataset.edit);
-
-  form.titol.value = tasca.titol;
-  form.descripcio.value = tasca.descripcio;
-  form.prioritat.value = tasca.prioritat;
-  form.data.value = tasca.dataVenciment;
-
-  tascaEditantId = tasca.id;
-  btnSubmit.textContent = "Guardar canvis";
-}
-
-if (tascaEditantId) {
-  const tasca = tasques.find(t => t.id === tascaEditantId);
-  tasca.titol = dades.titol;
-  tasca.descripcio = dades.descripcio;
-  tasca.prioritat = dades.prioritat;
-  tasca.dataVenciment = dades.dataVenciment;
-
-  tascaEditantId = null;
-  btnSubmit.textContent = "Afegir tasca";
-} else  {
-  tasques.push(crearTasca(dades));
-}
-
-const STORAGE_KEY = "tasquesKanban";
-let tasques = [];
-
-function carregarTasques() {
-  const dades = localStorage.getItem(STORAGE_KEY);
-  tasques = dades ? JSON.parse(dades) : [];
-}
-
-function guardarTasques() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasques));
-}
-
-function init() {
-  carregarTasques();
-  console.log("Tasques carregades:", tasques);
-}
-
-document.addEventListener("DOMContentLoaded", init);
-
+/*************************
+ * FILTRES I CERCA
+ *************************/
 function getTasquesFiltrades() {
   return tasques.filter(tasca => {
 
@@ -182,6 +203,9 @@ function getTasquesFiltrades() {
   });
 }
 
+/*************************
+ * ESTADÍSTIQUES
+ *************************/
 function actualitzarEstadistiques() {
   const total = tasques.length;
   const perFer = tasques.filter(t => t.estat === "perFer").length;
@@ -197,6 +221,19 @@ function actualitzarEstadistiques() {
   statPercent.textContent = percent;
 }
 
+/*************************
+ * EVENTS FILTRES
+ *************************/
 filtreEstat.addEventListener("change", renderTauler);
 filtrePrioritat.addEventListener("change", renderTauler);
 cercaText.addEventListener("input", renderTauler);
+
+/*************************
+ * INIT
+ *************************/
+function init() {
+  carregarTasques();
+  renderTauler();
+}
+
+document.addEventListener("DOMContentLoaded", init);

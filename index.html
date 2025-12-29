@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kanban - Gestió de Tasques</title>
-  <link rel="stylesheet" href="css/estils.css">
-  <script src="js/script.js"></script>
+  <link rel="stylesheet" href="css/estils.css" />
 </head>
 <body>
 
@@ -21,7 +20,7 @@
       <form id="task-form">
         <label>
           Títol
-          <input type="text" name="titol" required>
+          <input type="text" name="titol" required />
         </label>
 
         <label>
@@ -40,51 +39,51 @@
 
         <label>
           Data límit
-          <input type="date" name="data">
+          <input type="date" name="data" />
         </label>
 
         <button type="submit">Afegir tasca</button>
       </form>
-<h2>Filtres</h2>
 
-<label>
-  Estat
-  <select id="filtre-estat">
-    <option value="">Tots</option>
-    <option value="perFer">Per fer</option>
-    <option value="enCurs">En curs</option>
-    <option value="fet">Fet</option>
-  </select>
-</label>
+      <h2>Filtres</h2>
 
-<label>
-  Prioritat
-  <select id="filtre-prioritat">
-    <option value="">Totes</option>
-    <option value="baixa">Baixa</option>
-    <option value="mitjana">Mitjana</option>
-    <option value="alta">Alta</option>
-  </select>
-</label>
+      <label>
+        Estat
+        <select id="filtre-estat">
+          <option value="">Tots</option>
+          <option value="perFer">Per fer</option>
+          <option value="enCurs">En curs</option>
+          <option value="fet">Fet</option>
+        </select>
+      </label>
 
-<label>
-  Cercar
-  <input type="text" id="cerca-text" placeholder="Cerca...">
-</label>
+      <label>
+        Prioritat
+        <select id="filtre-prioritat">
+          <option value="">Totes</option>
+          <option value="baixa">Baixa</option>
+          <option value="mitjana">Mitjana</option>
+          <option value="alta">Alta</option>
+        </select>
+      </label>
 
-<h2>Estadístiques</h2>
-<ul>
-  <li>Total: <span id="stat-total">0</span></li>
-  <li>Per fer: <span id="stat-perfer">0</span></li>
-  <li>En curs: <span id="stat-encurs">0</span></li>
-  <li>Fet: <span id="stat-fet">0</span></li>
-  <li>Completades: <span id="stat-percent">0</span>%</li>
-</ul>
+      <label>
+        Cercar
+        <input type="text" id="cerca-text" placeholder="Cerca..." />
+      </label>
+
+      <h2>Estadístiques</h2>
+      <ul>
+        <li>Total: <span id="stat-total">0</span></li>
+        <li>Per fer: <span id="stat-perfer">0</span></li>
+        <li>En curs: <span id="stat-encurs">0</span></li>
+        <li>Fet: <span id="stat-fet">0</span></li>
+        <li>Completades: <span id="stat-percent">0</span>%</li>
+      </ul>
     </aside>
 
     <!-- Tauler Kanban -->
     <section class="kanban">
-
       <section class="columna">
         <h3>Per fer</h3>
         <div class="tasques" id="per-fer"></div>
@@ -99,7 +98,6 @@
         <h3>Fet</h3>
         <div class="tasques" id="fet"></div>
       </section>
-
     </section>
 
   </main>
