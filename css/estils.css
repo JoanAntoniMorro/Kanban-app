@@ -44,3 +44,23 @@ aside {
 .tasques {
   min-height: 100px;
 }
+
+@media (max-width: 768px) {
+
+  main {
+    flex-direction: column;
+  }
+
+  aside {
+    width: 100%;
+  }
+
+  .kanban {
+    flex-direction: column;
+  }
+
+  .columna {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
